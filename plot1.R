@@ -15,15 +15,25 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
+library(chron)
 
 fileUrl <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
 download.file(fileUrl,
-  destfile = "./power.txt",
-  method = "auto") #  Required for Linux, Mac - use auto for Windows
+  destfile = "./power.zip",
+  method = "curl") #  Required for Linux, Mac - use auto for Windows
 
-power <- read.csv("./power.txt",
+unzip("./power.zip", files = "household_power_consumption.txt")
+
+power <- read.csv("./household_power_consumption.txt",
   sep=";", na.strings="?", stringsAsFactors=FALSE)
 
 names(power) <- tolower(names(power))
-power$date <- as.Date(power$date, "%d/%m/%Y")
-power$time <- format(as.POSIXct(power$time, format="%H:%M:%S")
+power$date <- as.Date(power$date, format="%d/%m/%Y")
+power <- power[power$date >= "2007-02-01" & power$date <= "2007-02-02",]
+datetime <- paste(as.Date(power$date), power$time)
+power$datetime <- as.POSIXct(datetime)
+rm(datetime)
+
+# Plot 1 :: Global Active Power Histogram
+hist(power$global_active_power, main="Global Active Power",
+  xlab="Global Active Power (kilowatts)", ylab="Frequency", col="red")
