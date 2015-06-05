@@ -15,18 +15,21 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
-library(chron)
 
+# Download file and save as "power.zip"
 fileUrl <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
 download.file(fileUrl,
   destfile = "./power.zip",
   method = "curl") #  Required for Linux, Mac - use auto for Windows
 
+# Unzip the "household_power_consumption.txt" from the "power.zip" file.
 unzip("./power.zip", files = "household_power_consumption.txt")
 
+# Read the data into global envrionment and call the variable "power".
 power <- read.csv("./household_power_consumption.txt",
   sep=";", na.strings="?", stringsAsFactors=FALSE)
 
+# Tidy the data up.
 names(power) <- tolower(names(power))
 power$date <- as.Date(power$date, format="%d/%m/%Y")
 power <- power[power$date >= "2007-02-01" & power$date <= "2007-02-02",]
