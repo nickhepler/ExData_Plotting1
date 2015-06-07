@@ -1,4 +1,4 @@
-# plot1.R
+# plot4.R
 #  Copyright 2015 Nick Hepler <nick.hepler@outlook.com>
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -37,8 +37,25 @@ datetime <- paste(as.Date(power$date), power$time)
 power$datetime <- as.POSIXct(datetime)
 rm(datetime)
 
-# Plot 1 :: Global Active Power Histogram
-png(file = "plot1.png", width = 480, height = 480)
-hist(power$global_active_power, main="Global Active Power",
-  xlab="Global Active Power (kilowatts)", ylab="Frequency", col="red")
+# Plot 4 :: Global Active Power (kilowatts) by sub metering
+opar <- par(no.readonly=TRUE) # Copy cureent graphical parameters.
+par(mfrow=c(2,2), mar=c(4,4,2,1), oma=c(0,0,2,0))
+
+with(power, {
+  plot(global_active_power~datetime, type="l", 
+       ylab="Global Active Power (kilowatts)", xlab="")
+  plot(voltage~datetime, type="l", 
+       ylab="Voltage (volt)", xlab="")
+  plot(sub_metering_1~datetime, type="l", 
+       ylab="Global Active Power (kilowatts)", xlab="")
+  lines(sub_metering_2~datetime,col="Red")
+  lines(sub_metering_3~datetime,col="Blue")
+  legend("topright", col=c("black", "Red", "Blue"), lty=1, lwd=2, bty="n",
+         legend=c("Sub Metering 1", "Sub Metering 2", "Sub Metering 3"))
+  plot(global_reactive_power~datetime, type="l", 
+       ylab="Global Rective Power (kilowatts)",xlab="")
+})
+dev.copy(png, file="plot4.png", height=480, width=480)
 dev.off()
+
+par(opar)

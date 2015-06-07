@@ -1,4 +1,4 @@
-# plot1.R
+# plot2.R
 #  Copyright 2015 Nick Hepler <nick.hepler@outlook.com>
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -37,8 +37,8 @@ datetime <- paste(as.Date(power$date), power$time)
 power$datetime <- as.POSIXct(datetime)
 rm(datetime)
 
-# Plot 1 :: Global Active Power Histogram
-png(file = "plot1.png", width = 480, height = 480)
-hist(power$global_active_power, main="Global Active Power",
-  xlab="Global Active Power (kilowatts)", ylab="Frequency", col="red")
+# Plot 2 :: Global Active Power (kilowatts)
+png(file = "plot2.png", width = 480, height = 480)
+plot(power$global_active_power~power$datetime, type="l",
+     ylab="Global Active Power (kilowatts)", xlab="")
 dev.off()
